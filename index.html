@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Values.media · Tracking Automation Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ═══ THEMES ═══ */
+  :root, [data-theme="light"]{
+    --primary:#B8101E; --primary-dark:#630700; --primary-light:#d41828;
+    --secondary:#262523; --accent:#FF6584;
+    --bg:#FAFAFA; --card-bg:#ffffff; --body-bg:#ffffff;
+    --text:#262523; --text-light:#636E72; --text-muted:#9b9692;
+    --border:#E8E5E3; --border-strong:#D5D0CD;
+    --green:#16a34a; --green-bg:#dcfce7;
+    --orange:#ea580c; --orange-bg:#ffedd5;
+    --blue:#2b6cb0; --blue-bg:#dbeafe;
+    --purple:#7c3aed; --purple-bg:#ede9fe;
+    --red:#dc2626; --red-bg:#fde8e8;
+    --shadow:0 4px 20px rgba(0,0,0,.06);
+    --shadow-lg:0 12px 40px rgba(0,0,0,.10);
+    --shadow-primary:0 4px 15px rgba(184,16,30,.25);
+    --radius:12px; --radius-sm:8px;
+    --transition:all .3s cubic-bezier(.4,0,.2,1);
+    --btn-primary-bg:linear-gradient(135deg,#B8101E,#630700);
+    --btn-primary-hover:linear-gradient(135deg,#d41828,#8a0a00);
+    --card-border:1px solid #E8E5E3;
+    --header-gradient:linear-gradient(135deg,#B8101E,#630700);
+  }
+  [data-theme="dark"]{
+    --primary:#E84855; --primary-dark:#B8101E; --primary-light:#FF5A6A;
+    --secondary:#E8E5E3; --accent:#FF6584;
+    --bg:#1A1A1A; --card-bg:#262523; --body-bg:#1A1A1A;
+    --text:#E8E5E3; --text-light:#A8A5A2; --text-muted:#787472;
+    --border:#3A3A3A; --border-strong:#4A4A4A;
+    --green:#22c55e; --green-bg:#0f3a1f;
+    --orange:#fb923c; --orange-bg:#3a2a14;
+    --blue:#60a5fa; --blue-bg:#1e3a5f;
+    --purple:#a78bfa; --purple-bg:#2e1f4f;
+    --red:#f87171; --red-bg:#3d1818;
+    --shadow:0 4px 20px rgba(0,0,0,.30);
+    --shadow-lg:0 12px 40px rgba(0,0,0,.40);
+    --shadow-primary:0 4px 15px rgba(232,72,85,.35);
+    --btn-primary-bg:linear-gradient(135deg,#E84855,#B8101E);
+    --btn-primary-hover:linear-gradient(135deg,#FF5A6A,#d41828);
+    --card-border:1px solid #3A3A3A;
+    --header-gradient:linear-gradient(135deg,#2A1A1C,#1A1A1A);
+  }
+  [data-theme="gradient"]{
+    --primary:#B8101E; --primary-dark:#630700; --primary-light:#d41828;
+    --secondary:#262523; --accent:#FF6584;
+    --bg:#FAFAFA; --card-bg:#ffffff;
+    --body-bg:linear-gradient(180deg,#F5E8E8 0%,#fdf4f4 30%,#ffffff 100%);
+    --text:#262523; --text-light:#636E72; --text-muted:#9b9692;
+    --border:rgba(184,16,30,.15); --border-strong:rgba(184,16,30,.25);
+    --green:#16a34a; --green-bg:#dcfce7;
+    --orange:#ea580c; --orange-bg:#ffedd5;
+    --blue:#2b6cb0; --blue-bg:#dbeafe;
+    --purple:#7c3aed; --purple-bg:#ede9fe;
+    --red:#dc2626; --red-bg:#fde8e8;
+    --shadow:0 4px 20px rgba(184,16,30,.08);
+    --shadow-lg:0 12px 40px rgba(184,16,30,.15);
+    --shadow-primary:0 4px 15px rgba(184,16,30,.35);
+    --btn-primary-bg:linear-gradient(135deg,#B8101E,#630700);
+    --btn-primary-hover:linear-gradient(135deg,#d41828,#8a0a00);
+    --card-border:2px solid rgba(184,16,30,.15);
+    --header-gradient:linear-gradient(135deg,#B8101E,#630700);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Montserrat',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--body-bg); min-height:100vh;
+    color:var(--text); font-size:14px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    transition:background .5s ease,color .5s ease;
+  }
+
+  /* Décoratif V (thème dégradé uniquement) */
+  .decorative-v{
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    font-size:80vh; font-weight:700; color:rgba(184,16,30,.03);
+    pointer-events:none; z-index:0; opacity:0; user-select:none; line-height:1;
+    transition:opacity .5s ease;
+  }
+  [data-theme="gradient"] .decorative-v{opacity:1}
+
+  /* Theme Switcher */
+  .theme-switcher{
+    position:fixed; top:16px; right:20px; z-index:1000;
+    background:var(--card-bg); border:var(--card-border);
+    border-radius:var(--radius); padding:10px 14px;
+    box-shadow:var(--shadow-lg); display:flex; gap:8px; align-items:center;
+  }
+  .theme-switcher label{
+    font-size:.7rem; font-weight:600; color:var(--text-light);
+    text-transform:uppercase; letter-spacing:.5px;
+  }
+  .theme-btn{
+    width:24px; height:24px; border-radius:50%;
+    border:2px solid var(--border); cursor:pointer;
+    transition:var(--transition); position:relative; padding:0;
+  }
+  .theme-btn:hover{transform:scale(1.15); border-color:var(--primary)}
+  .theme-btn.active{border-color:var(--primary); box-shadow:0 0 0 3px rgba(184,16,30,.2)}
+  .theme-btn[data-theme="light"]{background:#ffffff}
+  .theme-btn[data-theme="dark"]{background:#1A1A1A}
+  .theme-btn[data-theme="gradient"]{background:linear-gradient(135deg,#F5E8E8,#ffffff)}
+
+  /* Header */
+  header.top{
+    background:var(--header-gradient); color:#fff;
+    padding:18px 32px; display:flex; align-items:center;
+    justify-content:space-between; box-shadow:var(--shadow);
+    position:relative; z-index:10;
+  }
+  header.top h1{
+    font-size:1.25rem; font-weight:700; letter-spacing:-.3px; cursor:pointer;
+    display:flex; align-items:center; gap:10px;
+  }
+  header.top h1 .logo-mark{
+    background:#fff; color:var(--primary);
+    width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:1rem;
+  }
+  header.top h1 span.sub{opacity:.8; font-weight:400; font-size:.85rem}
+  .top-right{display:flex; align-items:center; gap:12px}
+  .badge-top{
+    background:rgba(255,255,255,.18); padding:5px 12px; border-radius:20px;
+    font-size:.7rem; font-weight:600; letter-spacing:.5px; text-transform:uppercase;
+  }
+  .user-chip{
+    display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,.18); padding:4px 14px 4px 4px;
+    border-radius:30px; font-size:.8rem; font-weight:600; cursor:pointer;
+    transition:var(--transition);
+  }
+  .user-chip:hover{background:rgba(255,255,255,.28)}
+  .avatar{
+    width:28px; height:28px; border-radius:50%; background:#fff;
+    color:var(--primary); display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:.75rem;
+  }
+
+  .wrap{max-width:1400px; margin:0 auto; padding:28px 32px 80px; position:relative; z-index:1}
+
+  .breadcrumb{
+    display:flex; align-items:center; gap:8px;
+    font-size:.8rem; color:var(--text-light);
+    margin-bottom:20px; flex-wrap:wrap;
+  }
+  .breadcrumb a{color:var(--primary); text-decoration:none; font-weight:600; cursor:pointer}
+  .breadcrumb a:hover{text-decoration:underline}
+  .breadcrumb .sep{color:var(--border-strong)}
+  .breadcrumb .current{color:var(--text); font-weight:700}
+
+  .page-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:24px; flex-wrap:wrap; gap:14px;
+    animation:fadeInUp .5s ease;
+  }
+  .page-head h2{font-size:1.6rem; color:var(--text); font-weight:700; letter-spacing:-.5px}
+  .page-head h2 .sub{color:var(--text-light); font-weight:500; font-size:1.1rem; margin-left:4px}
+  .page-head .sub-line{color:var(--text-light); font-size:.9rem; margin-top:4px}
+
+  /* Cards */
+  .card{
+    background:var(--card-bg); border-radius:var(--radius);
+    padding:0; margin-bottom:24px;
+    box-shadow:var(--shadow-lg); border:var(--card-border);
+    overflow:hidden; transition:var(--transition);
+    animation:fadeInUp .5s ease backwards;
+  }
+  .card:hover{box-shadow:0 14px 48px rgba(184,16,30,.12)}
+  .card-head{
+    padding:18px 24px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:12px;
+    background:linear-gradient(to bottom,var(--card-bg),rgba(184,16,30,.02));
+  }
+  .card-head h2{
+    font-size:1.05rem; color:var(--text); font-weight:700;
+    display:flex; align-items:center; gap:10px; flex:1;
+  }
+  .card-head .step-number{
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:#fff; width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.85rem; font-weight:700; flex-shrink:0;
+  }
+  .card-body{padding:22px 24px}
+  .sub{color:var(--text-light); font-size:.8rem; margin-top:2px}
+
+  .opt-tag{
+    display:inline-block; font-size:.65rem; font-weight:700;
+    letter-spacing:.5px; color:var(--text-light); background:var(--bg);
+    border:1px solid var(--border); padding:2px 8px; border-radius:10px;
+    margin-left:8px; vertical-align:middle; text-transform:uppercase;
+  }
+
+  .field{display:flex; flex-direction:column; gap:6px}
+  .field input[type=text]{
+    padding:11px 14px; border:2px solid var(--border);
+    border-radius:var(--radius-sm); font-family:inherit; font-size:.9rem;
+    background:var(--card-bg); color:var(--text); transition:var(--transition);
+  }
+  .field input[type=text]:focus{
+    outline:none; border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(184,16,30,.1);
+  }
+  label.lbl{
+    font-weight:600; color:var(--text-light); font-size:.75rem;
+    text-transform:uppercase; letter-spacing:.5px;
+  }
+
+  /* Buttons */
+  button{
+    cursor:pointer; border:none; border-radius:var(--radius-sm);
+    padding:11px 20px; font-weight:600; font-family:inherit; font-size:.9rem;
+    transition:var(--transition);
+    display:inline-flex; align-items:center; gap:8px; justify-content:center;
+  }
+  .btn-primary{
+    background:var(--btn-primary-bg); color:#fff;
+    box-shadow:var(--shadow-primary);
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 6px 20px rgba(184,16,30,.40)}
+  .btn-primary:active{transform:translateY(0)}
+  .btn-ghost{
+    background:var(--card-bg); color:var(--text); border:2px solid var(--border);
+  }
+  .btn-ghost:hover{border-color:var(--primary); color:var(--primary)}
+  .btn-secondary{
+    background:transparent; color:var(--primary); border:2px solid var(--primary);
+  }
+  .btn-secondary:hover{background:var(--primary); color:#fff}
+  .btn-green{
+    background:linear-gradient(135deg,#16a34a,#15803d); color:#fff;
+    box-shadow:0 4px 15px rgba(22,163,74,.25);
+  }
+  .btn-green:hover{transform:translateY(-2px); box-shadow:0 6px 20px rgba(22,163,74,.35)}
+  .btn-danger{
+    background:var(--card-bg); color:#ee5a5a; border:2px solid #f3c4c4;
+  }
+  .btn-danger:hover{background:#fff5f5; color:#dc2626}
+  .btn-danger-solid{
+    background:linear-gradient(135deg,#ff6b6b,#ee5a5a); color:#fff;
+    box-shadow:0 4px 15px rgba(238,90,90,.25);
+  }
+  .btn-danger-solid:hover{transform:translateY(-2px); box-shadow:0 6px 20px rgba(238,90,90,.35)}
+  .btn-import{
+    background:var(--card-bg); color:var(--primary);
+    border:2px solid var(--primary); font-weight:700;
+  }
+  .btn-import:hover{background:var(--primary); color:#fff; transform:translateY(-2px)}
+  .btn-archive{
+    background:linear-gradient(135deg,#7c3aed,#5b21b6); color:#fff;
+    box-shadow:0 4px 15px rgba(124,58,237,.25);
+  }
+  .btn-archive:hover{transform:translateY(-2px); box-shadow:0 6px 20px rgba(124,58,237,.35)}
+  .btn-big{font-size:1rem; padding:13px 24px}
+  .btn-sm{padding:6px 12px; font-size:.78rem}
+
+  /* Dashboard cards */
+  .grid-cards{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:18px;
+  }
+  .client-card{
+    background:var(--card-bg); border:var(--card-border);
+    border-radius:var(--radius); padding:24px; cursor:pointer;
+    transition:var(--transition); box-shadow:var(--shadow);
+    position:relative; overflow:hidden;
+    animation:fadeInUp .4s ease backwards;
+  }
+  .client-card:hover{
+    transform:translateY(-4px); border-color:var(--primary);
+    box-shadow:0 12px 32px rgba(184,16,30,.18);
+  }
+  .client-card::before{
+    content:""; position:absolute; top:0; left:0; width:100%; height:4px;
+    background:linear-gradient(90deg,var(--primary),var(--primary-dark));
+    transform:scaleX(0); transform-origin:left; transition:transform .3s ease;
+  }
+  .client-card:hover::before{transform:scaleX(1)}
+  .client-card .name{font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:6px}
+  .client-card .meta{
+    font-size:.75rem; color:var(--text-light); display:flex; gap:14px;
+    margin-top:14px; padding-top:14px; border-top:1px solid var(--border);
+  }
+  .client-card .meta b{color:var(--text); font-weight:700}
+  .client-card .del-btn{
+    position:absolute; top:14px; right:14px; background:var(--card-bg);
+    border:1px solid var(--border); color:#ee5a5a;
+    width:30px; height:30px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    padding:0; opacity:0; transition:var(--transition);
+  }
+  .client-card:hover .del-btn{opacity:1}
+  .client-card .del-btn:hover{background:#fff5f5; border-color:#ee5a5a}
+
+  /* Wave list */
+  .wave-item{
+    display:grid; grid-template-columns:1fr auto auto auto;
+    align-items:center; gap:18px; padding:18px 22px;
+    border:var(--card-border); border-radius:var(--radius-sm);
+    margin-bottom:10px; background:var(--card-bg); cursor:pointer;
+    transition:var(--transition); position:relative;
+    animation:fadeInUp .3s ease backwards;
+  }
+  .wave-item:hover{
+    border-color:var(--primary); transform:translateX(4px);
+    box-shadow:var(--shadow);
+  }
+  .wave-item .wave-name{font-weight:700; color:var(--text); font-size:1rem}
+  .wave-item .wave-year{color:var(--text-light); font-size:.8rem; margin-top:3px}
+  .wave-item .stat{font-size:.7rem; color:var(--text-light); text-align:center; min-width:64px}
+  .wave-item .stat b{
+    display:block; color:var(--text); font-size:1.3rem; font-weight:700; margin-bottom:3px;
+  }
+  .wave-item .stat.archives b{color:var(--purple)}
+  .wave-item .del-btn{
+    background:var(--card-bg); border:1px solid var(--border); color:#ee5a5a;
+    width:34px; height:34px; border-radius:8px; padding:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .wave-item .del-btn:hover{background:#fff5f5; border-color:#ee5a5a}
+
+  /* Tool selector */
+  .tool-row{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+  select{font-family:inherit; font-size:.9rem}
+  select.tool{
+    padding:11px 16px; border:2px solid var(--primary);
+    border-radius:var(--radius-sm); background:var(--card-bg);
+    color:var(--primary); font-weight:700; min-width:280px; cursor:pointer;
+  }
+  select.tool:focus{outline:none; box-shadow:0 0 0 3px rgba(184,16,30,.15)}
+  .formula-preview{
+    flex:1; min-width:300px; background:var(--bg);
+    border:1px dashed var(--border-strong);
+    border-radius:var(--radius-sm); padding:10px 14px;
+    font-family:'Consolas','Courier New',monospace; font-size:.75rem;
+    color:var(--text-light); word-break:break-all;
+  }
+
+  /* Toolbar */
+  .toolbar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center}
+  .toolbar .spacer{flex:1}
+
+  /* Tables */
+  .grid-scroll{
+    overflow-x:auto; border:1px solid var(--border);
+    border-radius:var(--radius-sm); background:var(--card-bg);
+  }
+  table{border-collapse:collapse; width:100%; min-width:1000px; font-size:.85rem}
+  thead th{
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:#fff; padding:13px 12px; text-align:left;
+    font-weight:600; font-size:.72rem; text-transform:uppercase;
+    letter-spacing:.4px; white-space:nowrap;
+    position:sticky; top:0; z-index:10;
+  }
+  th.req::after{content:" *"; color:#ffd1d1}
+  td{
+    border-bottom:1px solid var(--border); border-right:1px solid var(--border);
+    padding:0; vertical-align:middle; background:var(--card-bg);
+  }
+  td:last-child{border-right:none}
+  tr:nth-child(even) td{background:rgba(184,16,30,.02)}
+  tr:hover td{background:rgba(184,16,30,.05)}
+  td input{
+    width:100%; border:none; padding:10px 11px; background:transparent;
+    outline:none; font-size:.82rem; font-family:inherit; color:var(--text);
+  }
+  td input:focus{
+    background:rgba(184,16,30,.04);
+    box-shadow:inset 0 0 0 2px var(--primary);
+  }
+  td input.combo{
+    padding-right:24px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--primary) 50%),linear-gradient(135deg,var(--primary) 50%,transparent 50%);
+    background-position:calc(100% - 12px) 14px,calc(100% - 7px) 14px;
+    background-size:5px 5px,5px 5px; background-repeat:no-repeat;
+  }
+  td input.combo:focus{background-color:rgba(184,16,30,.04)}
+  td.invalid{background:var(--red-bg)}
+  td.invalid input{color:var(--red); font-weight:600}
+  tr:nth-child(even) td.invalid{background:var(--red-bg)}
+  .row-actions{display:flex; gap:4px; padding:0 8px; white-space:nowrap}
+  .icon-btn{
+    background:var(--bg); border:1px solid var(--border);
+    border-radius:6px; padding:5px 8px; font-size:.7rem;
+    color:var(--text); cursor:pointer; font-family:inherit; font-weight:600;
+    transition:var(--transition);
+  }
+  .icon-btn:hover{background:var(--primary); color:#fff; border-color:var(--primary)}
+  .icon-btn.del{color:#ee5a5a; border-color:#f3c4c4}
+  .icon-btn.del:hover{background:#ee5a5a; color:#fff; border-color:#ee5a5a}
+  .meta-cell{padding:6px 10px; font-size:.7rem; color:var(--text-light); line-height:1.4; white-space:nowrap}
+  .meta-cell b{color:var(--text); font-weight:700}
+
+  /* Tooltip d'erreur */
+  td.invalid{position:relative}
+  td.invalid:hover::after{
+    content:attr(data-error); position:absolute; left:6px; top:100%; z-index:30;
+    background:var(--red); color:#fff; font-size:.7rem; font-weight:500;
+    padding:6px 10px; border-radius:6px; white-space:nowrap;
+    box-shadow:0 4px 12px rgba(0,0,0,.2); margin-top:2px;
+  }
+
+  .empty-row{
+    text-align:center; padding:48px 20px; color:var(--text-light); font-style:italic;
+  }
+  .empty-row .big{
+    display:block; font-size:1rem; font-style:normal; font-weight:700;
+    color:var(--text); margin-bottom:8px;
+  }
+  .empty-row .actions{display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap}
+
+  /* Expert panel */
+  .expert-panel{
+    background:linear-gradient(135deg,rgba(22,163,74,.08),rgba(22,163,74,.03));
+    border:1px solid rgba(22,163,74,.25);
+    border-radius:var(--radius-sm); padding:18px 22px;
+  }
+  .expert-panel .lbl{color:#15803d}
+  .expert-panel input[type=text]{
+    border-color:rgba(22,163,74,.3); background:var(--card-bg);
+  }
+  .expert-panel input[type=text]:focus{
+    border-color:var(--green); box-shadow:0 0 0 3px rgba(22,163,74,.15);
+  }
+
+  /* Output URLs */
+  .out-item{
+    border:1px solid var(--border); border-radius:var(--radius-sm);
+    padding:14px 16px; background:var(--card-bg); margin-bottom:10px;
+    transition:var(--transition);
+  }
+  .out-item.ok{border-left:4px solid var(--green)}
+  .out-item.ok:hover{border-color:var(--green); box-shadow:0 2px 12px rgba(22,163,74,.15)}
+  .out-item.bad{border-left:4px solid var(--red); background:var(--red-bg)}
+  .out-meta{font-size:.7rem; color:var(--text-light); margin-bottom:6px; font-weight:600}
+  .out-link{
+    font-family:'Consolas','Courier New',monospace; font-size:.78rem;
+    word-break:break-all; color:var(--primary); text-decoration:none;
+  }
+  .out-link:hover{text-decoration:underline}
+  .out-bad-msg{color:var(--red); font-weight:600; font-size:.8rem}
+  .summary-bar{
+    display:flex; gap:10px; align-items:center; margin-bottom:16px;
+    font-size:.8rem; font-weight:600; flex-wrap:wrap;
+  }
+  .pill{padding:5px 12px; border-radius:20px; font-size:.72rem; text-transform:uppercase; letter-spacing:.3px}
+  .pill.ok{background:var(--green-bg); color:#166534}
+  .pill.bad{background:var(--red-bg); color:var(--red)}
+  .pill.info{background:var(--blue-bg); color:#1e40af}
+
+  .expert-note{
+    background:linear-gradient(135deg,rgba(22,163,74,.08),rgba(22,163,74,.03));
+    border:1px solid rgba(22,163,74,.25);
+    border-left:4px solid var(--green);
+    border-radius:var(--radius-sm); padding:11px 16px;
+    margin-bottom:12px; font-size:.82rem; color:#166534;
+  }
+  .expert-note b{font-weight:700}
+
+  .empty{
+    color:var(--text-light); text-align:center; padding:60px 20px;
+    font-style:italic; background:var(--card-bg);
+    border:2px dashed var(--border-strong); border-radius:var(--radius);
+  }
+  .empty .big{
+    font-size:1.15rem; font-style:normal; font-weight:700;
+    color:var(--text); margin-bottom:10px; display:block;
+  }
+
+  /* Snapshots */
+  .snap-list{display:flex; flex-direction:column; gap:8px}
+  .snap-item{
+    display:flex; align-items:center; gap:14px;
+    padding:14px 18px; border:1px solid var(--border);
+    border-radius:var(--radius-sm); background:var(--card-bg);
+    transition:var(--transition);
+  }
+  .snap-item:hover{border-color:var(--purple); background:rgba(124,58,237,.04); transform:translateX(2px)}
+  .snap-info{flex:1; min-width:0}
+  .snap-label{font-weight:700; color:var(--text); font-size:.9rem; margin-bottom:4px; display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .snap-meta{font-size:.72rem; color:var(--text-light)}
+  .snap-meta b{color:var(--text); font-weight:600}
+  .snap-badge{
+    display:inline-block; background:var(--purple-bg); color:#5b21b6;
+    padding:2px 8px; border-radius:12px; font-size:.62rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:.3px;
+  }
+  .snap-actions{display:flex; gap:6px}
+  .snap-empty{
+    padding:32px 20px; text-align:center; color:var(--text-light);
+    font-style:italic; background:var(--bg);
+    border:1px dashed var(--border-strong); border-radius:var(--radius-sm);
+  }
+
+  /* Modal */
+  .modal-bg{
+    position:fixed; inset:0; background:rgba(38,37,35,.55);
+    display:flex; align-items:center; justify-content:center;
+    z-index:100; padding:20px; opacity:0; pointer-events:none;
+    transition:opacity .25s ease; backdrop-filter:blur(4px);
+  }
+  .modal-bg.show{opacity:1; pointer-events:auto}
+  .modal{
+    background:var(--card-bg); border-radius:var(--radius);
+    max-width:480px; width:100%; padding:28px;
+    box-shadow:0 24px 70px rgba(0,0,0,.25);
+    transform:translateY(20px) scale(.98); transition:transform .25s ease;
+    max-height:92vh; overflow-y:auto; border:var(--card-border);
+  }
+  .modal.large{max-width:820px}
+  .modal-bg.show .modal{transform:translateY(0) scale(1)}
+  .modal h3{font-size:1.2rem; color:var(--text); margin-bottom:8px; font-weight:700}
+  .modal p{color:var(--text-light); font-size:.88rem; margin-bottom:18px}
+  .modal input,.modal select,.modal textarea{
+    width:100%; padding:11px 14px; border:2px solid var(--border);
+    border-radius:var(--radius-sm); font-size:.9rem; margin-bottom:14px;
+    font-family:inherit; background:var(--card-bg); color:var(--text);
+    transition:var(--transition);
+  }
+  .modal input:focus,.modal select:focus,.modal textarea:focus{
+    border-color:var(--primary); outline:none;
+    box-shadow:0 0 0 3px rgba(184,16,30,.1);
+  }
+  .modal-actions{display:flex; gap:10px; justify-content:flex-end; margin-top:8px; flex-wrap:wrap}
+
+  /* Import modal */
+  .import-file-zone{
+    padding:24px; border:2px dashed var(--border-strong);
+    border-radius:var(--radius-sm); text-align:center;
+    background:var(--bg); margin-bottom:14px;
+    transition:var(--transition);
+  }
+  .import-file-zone:hover{border-color:var(--primary); background:rgba(184,16,30,.02)}
+  .import-file-zone label.file-pick{
+    display:inline-block; padding:11px 22px;
+    background:var(--btn-primary-bg); color:#fff;
+    border-radius:var(--radius-sm); cursor:pointer; font-weight:600;
+    font-size:.85rem; margin-bottom:0; box-shadow:var(--shadow-primary);
+    transition:var(--transition);
+  }
+  .import-file-zone label.file-pick:hover{transform:translateY(-2px)}
+  .import-file-zone input[type=file]{display:none}
+  .import-file-zone .file-name{margin-top:12px; font-size:.78rem; color:var(--green); font-weight:600}
+  .import-textarea{
+    width:100%; padding:12px 14px; border:2px solid var(--border);
+    border-radius:var(--radius-sm); font-family:'Consolas','Courier New',monospace;
+    font-size:.78rem; min-height:140px; resize:vertical; line-height:1.5;
+    margin-bottom:14px; background:var(--card-bg); color:var(--text);
+  }
+  .import-textarea:focus{outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(184,16,30,.1)}
+  .column-map{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+    gap:8px; margin:10px 0 14px;
+  }
+  .col-cell{background:var(--bg); padding:10px 12px; border-radius:var(--radius-sm); border:1px solid var(--border)}
+  .col-cell-name{
+    font-size:.62rem; color:var(--text-light); text-transform:uppercase;
+    font-weight:700; margin-bottom:5px; letter-spacing:.3px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .col-cell select{
+    width:100%; padding:6px 7px; border:1px solid var(--border);
+    border-radius:5px; font-size:.78rem; font-family:inherit;
+    background:var(--card-bg); color:var(--text); margin:0;
+  }
+  .preview-wrap{
+    max-height:200px; overflow:auto; border:1px solid var(--border);
+    border-radius:var(--radius-sm); margin-top:6px;
+  }
+  .preview-table{font-size:.74rem; width:100%; border-collapse:collapse}
+  .preview-table th{
+    background:var(--bg); border-bottom:1px solid var(--border);
+    padding:7px 10px; text-align:left; font-weight:700; color:var(--primary);
+    position:sticky; top:0; font-size:.68rem; text-transform:uppercase;
+  }
+  .preview-table td{
+    border-bottom:1px solid var(--border); padding:5px 10px;
+    font-family:'Consolas','Courier New',monospace; color:var(--text);
+  }
+  .preview-info{font-size:.78rem; color:var(--text-light); margin-top:8px}
+  .preview-info b{color:var(--primary)}
+  .url-result{
+    background:var(--card-bg); border:1px solid var(--border);
+    border-left:4px solid var(--green); border-radius:var(--radius-sm);
+    padding:11px 14px; margin-bottom:6px;
+    font-family:'Consolas','Courier New',monospace; font-size:.72rem;
+    word-break:break-all; color:var(--primary);
+  }
+  .url-result.bad{border-left-color:var(--red); background:var(--red-bg); color:var(--red)}
+  .url-result b{display:block; margin-bottom:3px; color:var(--text); font-family:inherit; font-size:.72rem; font-weight:700}
+  .import-check{
+    display:flex; align-items:center; gap:10px; cursor:pointer;
+    font-size:.85rem; margin-bottom:14px; font-weight:600; color:var(--text);
+  }
+  .import-check input{width:16px; height:16px; accent-color:var(--primary); margin:0}
+  .section-title{
+    font-size:.7rem; color:var(--text-light); margin:14px 0 6px;
+    font-weight:700; text-transform:uppercase; letter-spacing:.4px;
+  }
+  .or-divider{
+    display:flex; align-items:center; gap:10px; margin:14px 0;
+    color:var(--text-light); font-size:.7rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:.5px;
+  }
+  .or-divider::before,.or-divider::after{
+    content:""; flex:1; height:1px; background:var(--border);
+  }
+
+  /* Export tabs */
+  .export-tabs{
+    display:flex; gap:4px; margin-bottom:14px;
+    border-bottom:2px solid var(--border);
+  }
+  .export-tab{
+    padding:11px 20px; cursor:pointer; border:none; background:none;
+    font-weight:600; font-size:.82rem; color:var(--text-light);
+    border-bottom:3px solid transparent; border-radius:0;
+    font-family:inherit; margin-bottom:-2px; transition:var(--transition);
+  }
+  .export-tab.active{color:var(--primary); border-color:var(--primary)}
+  .export-tab:hover:not(.active){color:var(--primary); background:rgba(184,16,30,.04)}
+  .export-info{
+    font-size:.82rem; background:rgba(184,16,30,.04);
+    border-left:3px solid var(--primary);
+    padding:11px 14px; border-radius:var(--radius-sm);
+    color:var(--text); margin-bottom:14px; line-height:1.5;
+  }
+  .export-info b{color:var(--primary)}
+  .export-info em{font-style:italic; color:var(--primary); font-weight:700}
+
+  /* Toast */
+  .toast{
+    position:fixed; bottom:24px; right:24px;
+    background:var(--card-bg); color:var(--text);
+    padding:14px 22px; border-radius:var(--radius-sm);
+    box-shadow:var(--shadow-lg);
+    font-weight:600; font-size:.88rem;
+    border-left:4px solid var(--primary);
+    z-index:200; max-width:340px;
+    transform:translateX(120%); transition:transform .3s ease;
+  }
+  .toast.show{transform:translateX(0)}
+
+  /* Sync indicator */
+  .sync-indicator{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:.68rem; color:rgba(255,255,255,.85); font-weight:600;
+  }
+  .sync-dot{width:8px; height:8px; border-radius:50%; background:#22c55e; animation:pulse 2s infinite}
+
+  /* Animations */
+  @keyframes fadeInUp{from{opacity:0; transform:translateY(15px)} to{opacity:1; transform:translateY(0)}}
+  @keyframes pulse{0%,100%{opacity:1} 50%{opacity:.4}}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:8px; height:8px}
+  ::-webkit-scrollbar-track{background:var(--bg); border-radius:4px}
+  ::-webkit-scrollbar-thumb{background:var(--primary); border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--primary-dark)}
+
+  @media(max-width:700px){
+    .grid-cards{grid-template-columns:1fr}
+    .wave-item{grid-template-columns:1fr; text-align:left}
+    .wrap{padding:20px 16px 60px}
+    .theme-switcher{top:10px; right:10px; padding:8px 12px}
+    header.top{padding:14px 18px}
+  }
+</style>
+</head>
+<body>
+
+<div class="decorative-v" aria-hidden="true">V</div>
+
+<div class="theme-switcher">
+  <label>Style</label>
+  <button class="theme-btn active" data-theme="light" onclick="setTheme('light')" title="Clair"></button>
+  <button class="theme-btn" data-theme="dark" onclick="setTheme('dark')" title="Sombre"></button>
+  <button class="theme-btn" data-theme="gradient" onclick="setTheme('gradient')" title="Dégradé"></button>
+</div>
+
+<datalist id="dl-source">
+  <option value="GAG"></option><option value="Meta"></option><option value="Xandr"></option>
+  <option value="Pinterest"></option><option value="Amazon"></option><option value="DV360"></option>
+  <option value="Linkedin"></option><option value="Tiktok"></option><option value="Snapchat"></option>
+  <option value="Youtube"></option><option value="TTD"></option><option value="Criteo"></option>
+</datalist>
+<datalist id="dl-medium">
+  <option value="Paid_Social"></option><option value="GAG"></option><option value="Display"></option>
+  <option value="Hawk"></option><option value="BVOD"></option><option value="VOL"></option>
+</datalist>
+
+<header class="top">
+  <h1 onclick="App.goDashboard()">
+    <span class="logo-mark">V</span>
+    Values.media <span class="sub">· Tracking Automation Builder</span>
+  </h1>
+  <div class="top-right">
+    <span class="sync-indicator"><span class="sync-dot"></span><span id="syncLabel">Synchronisé</span></span>
+    <span class="badge-top">Outil interne</span>
+    <div class="user-chip" onclick="App.changeUser()" title="Changer d'utilisateur">
+      <span class="avatar" id="userAvatar">?</span>
+      <span id="userName">Invité</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="breadcrumb" class="breadcrumb"></div>
+  <div id="viewRoot"></div>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   THEME
+   ============================================================ */
+async function setTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === theme);
+  });
+  try { await window.storage.set('theme', JSON.stringify(theme), false); } catch(e){}
+}
+async function loadTheme(){
+  try {
+    const r = await window.storage.get('theme', false);
+    return r?.value ? JSON.parse(r.value) : 'light';
+  } catch(e) { return 'light'; }
+}
+
+/* ============================================================
+   STORE
+   ============================================================ */
+const Store = {
+  async _list(prefix){
+    try{ const r = await window.storage.list(prefix, true); return r?.keys || []; }
+    catch(e){ return []; }
+  },
+  async _get(key){
+    try{ const r = await window.storage.get(key, true); return r ? JSON.parse(r.value) : null; }
+    catch(e){ return null; }
+  },
+  async _set(key, val){
+    const payload = JSON.stringify(val);
+    if(payload.length > 4 * 1024 * 1024){
+      console.warn(`Storage "${key}" : ${(payload.length/1024/1024).toFixed(2)}MB (limite 5MB)`);
+    }
+    let lastErr;
+    for(let attempt = 0; attempt < 3; attempt++){
+      try{ await window.storage.set(key, payload, true); return true; }
+      catch(e){
+        lastErr = e;
+        if(attempt === 0){
+          console.debug(`Storage set "${key}" — retry transparent (tentative 1)`);
+        } else {
+          console.warn(`Storage set "${key}" — tentative ${attempt+1}/3 échouée : ${e?.message||e}`);
+        }
+        if(attempt < 2) await new Promise(r => setTimeout(r, 600 * (attempt+1) + Math.random()*200));
+      }
+    }
+    setSync('Erreur de sauvegarde');
+    setTimeout(()=>setSync('Synchronisé'), 3000);
+    throw lastErr;
+  },
+  async _del(key){
+    try{ await window.storage.delete(key, true); return true; }
+    catch(e){ return false; }
+  },
+
+  async listAdvertisers(){
+    const keys = await this._list('adv:');
+    const items = await Promise.all(keys.map(k => this._get(k)));
+    return items.filter(Boolean).sort((a,b)=>a.name.localeCompare(b.name));
+  },
+  async saveAdvertiser(adv){ return this._set('adv:'+adv.id, adv); },
+  async deleteAdvertiser(id){
+    const waves = await this.listWaves(id);
+    for(const w of waves) await this.deleteWave(w.id, id);
+    return this._del('adv:'+id);
+  },
+  async getAdvertiser(id){ return this._get('adv:'+id); },
+
+  async listWaves(advertiserId){
+    const keys = await this._list('wav:'+advertiserId+':');
+    const items = await Promise.all(keys.map(k => this._get(k)));
+    return items.filter(Boolean).sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
+  },
+  async saveWave(wave){ return this._set('wav:'+wave.advertiser_id+':'+wave.id, wave); },
+  async deleteWave(id, advertiserId){
+    await this._del('rows:'+id);
+    await this._del('snap:'+id);
+    try {
+      const oldKeys = await this._list('row:'+id+':');
+      for(const k of oldKeys){ try { await this._del(k); } catch(e){} }
+    } catch(e){}
+    return this._del('wav:'+advertiserId+':'+id);
+  },
+  async getWave(id, advertiserId){ return this._get('wav:'+advertiserId+':'+id); },
+
+  async listRows(waveId){
+    const data = await this._get('rows:'+waveId);
+    if(data && Array.isArray(data.rows)){
+      return data.rows.slice().sort((a,b)=>(a.created_at||'').localeCompare(b.created_at||''));
+    }
+    const oldKeys = await this._list('row:'+waveId+':');
+    if(oldKeys.length === 0) return [];
+    const items = await Promise.all(oldKeys.map(k => this._get(k)));
+    const rows = items.filter(Boolean).sort((a,b)=>(a.created_at||'').localeCompare(b.created_at||''));
+    try { await this._set('rows:'+waveId, { rows }); } catch(e){ console.warn('Migration failed', e); }
+    return rows;
+  },
+  async saveRow(row){
+    row.updated_at = new Date().toISOString();
+    row.updated_by = State.user?.name || 'Anonyme';
+    const all = await this.listRows(row.wave_id);
+    const idx = all.findIndex(r => r.id === row.id);
+    if(idx >= 0) all[idx] = row; else all.push(row);
+    return this._set('rows:'+row.wave_id, { rows: all });
+  },
+  async saveRows(waveId, rowsToSave){
+    if(!rowsToSave || !rowsToSave.length) return true;
+    const ts = new Date().toISOString();
+    const user = State.user?.name || 'Anonyme';
+    const all = await this.listRows(waveId);
+    rowsToSave.forEach(r => {
+      r.updated_at = ts; r.updated_by = user;
+      const idx = all.findIndex(x => x.id === r.id);
+      if(idx >= 0) all[idx] = r; else all.push(r);
+    });
+    return this._set('rows:'+waveId, { rows: all });
+  },
+  async deleteRow(row){
+    const all = await this.listRows(row.wave_id);
+    return this._set('rows:'+row.wave_id, { rows: all.filter(r => r.id !== row.id) });
+  },
+  async clearRows(waveId){ return this._set('rows:'+waveId, { rows: [] }); },
+
+  async listSnapshots(waveId){
+    const data = await this._get('snap:'+waveId);
+    return (data?.snapshots || []).slice().sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
+  },
+  async saveSnapshot(waveId, snapshot){
+    const existing = await this.listSnapshots(waveId);
+    existing.unshift(snapshot);
+    return this._set('snap:'+waveId, { snapshots: existing });
+  },
+  async deleteSnapshot(waveId, snapshotId){
+    const existing = await this.listSnapshots(waveId);
+    return this._set('snap:'+waveId, { snapshots: existing.filter(s => s.id !== snapshotId) });
+  }
+};
+
+/* ============================================================
+   CONSTANTES & STATE
+   ============================================================ */
+const TOOLS = {
+  ga4:{label:"GA4 (UTM)", example:"?utm_source=Meta&utm_medium=Paid_Social&utm_campaign=v1lu52_LNB_2026_GreenDays_Juin_2026&utm_term=Conversion&utm_content=Carrousel"},
+  matomo:{label:"Matomo (PK)", example:"?pk_source=DV360&pk_medium=Display&pk_campaign=v1lu52_..._&pk_keyword=Conversion&pk_content=Video"},
+  eulerian:{label:"Eulerian (ESC)", example:"...&esc-publisher=meta&esc-name=v1lu52_..._&esc-location=Conversion&esc-creative=Carrousel..."},
+  piano:{label:"Piano Analytics", example:"?at_medium=Paid_Social&at_campaign=v1lu52_..._&at_platform=Meta"}
+};
+const PREFIX = 'v1lu52_';
+const COLS_GRID = ['baseurl','source','medium','objectif','crea'];
+const FIELD_LABELS = {
+  baseurl:'URL de base', source:'Source', medium:'Medium',
+  objectif:'Objectif', crea:'Créa / Format'
+};
+
+const State = {
+  view: 'dashboard',
+  advertiserId: null, waveId: null,
+  advertiser: null, wave: null,
+  rows: [], tool: 'ga4',
+  user: null, pollTimer: null,
+  isDirty: new Set(),
+  import: null,
+  _csvCache: null, _csvExports: null, _csvCtx: null
+};
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+const now   = () => new Date().toISOString();
+const fmtDate = iso => {
+  if(!iso) return '—';
+  const d = new Date(iso), today = new Date();
+  const diff = (today - d) / 60000;
+  if(diff < 1) return "à l'instant";
+  if(diff < 60) return `il y a ${Math.round(diff)} min`;
+  if(diff < 1440) return `il y a ${Math.round(diff/60)} h`;
+  return d.toLocaleDateString('fr-FR');
+};
+const fmtFullDate = iso => {
+  if(!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('fr-FR') + ' à ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+};
+function stripAccents(s){ return String(s||'').normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+function normalize(v){ return stripAccents(String(v||'').trim()).replace(/\s+/g,"_"); }
+function validateCell(col, val){
+  const v = String(val||'').trim();
+  if(COLS_GRID.includes(col) && v==='') return "Champ obligatoire manquant";
+  if(col==='baseurl' && !/^https?:\/\//i.test(v)) return "URL invalide (http:// ou https:// requis)";
+  if(['source','medium','objectif','crea'].includes(col)){
+    if(/[À-ÿ]/.test(v)) return "Accent interdit — sera normalisé";
+    if(/\s/.test(v))    return "Espace interdit — sera remplacé par _";
+    if(/[^A-Za-z0-9_\-]/.test(v)) return "Caractère spécial interdit";
+  }
+  return null;
+}
+function buildCampaign(advName, year, waveName){
+  return PREFIX + [advName, year, waveName].map(normalize).join('_');
+}
+function buildUrl(tool, r, advName, year, waveName){
+  if(!r.baseurl) return '';
+  const sep = r.baseurl.includes('?') ? '&' : '?';
+  const camp = buildCampaign(advName, year, waveName);
+  const src=normalize(r.source), med=normalize(r.medium), obj=normalize(r.objectif), crea=normalize(r.crea);
+  if(tool==='ga4')      return `${r.baseurl}${sep}utm_source=${src}&utm_medium=${med}&utm_campaign=${camp}&utm_term=${obj}&utm_content=${crea}`;
+  if(tool==='matomo')   return `${r.baseurl}${sep}pk_source=${src}&pk_medium=${med}&pk_campaign=${camp}&pk_keyword=${obj}&pk_content=${crea}`;
+  if(tool==='eulerian'){
+    const utm=`utm_source=${src}&utm_medium=${med}&utm_campaign=${camp}&utm_term=${obj}&utm_content=${crea}`;
+    const esc=`esc-publisher=${src.toLowerCase()}&esc-name=${camp}&esc-location=${obj}&esc-creative=${crea}&esc-creativetype=1x1&eseg-name=site-source&eseg-item=${src}`;
+    return `${r.baseurl}${sep}${utm}&${esc}`;
+  }
+  if(tool==='piano')    return `${r.baseurl}${sep}at_medium=${med}&at_campaign=${camp}&at_platform=${src}`;
+  return '';
+}
+
+function parseTabular(text){
+  if(!text || !String(text).trim()) return { sep:'\t', rows:[] };
+  text = String(text).replace(/\r/g,'');
+  const first = text.split('\n').find(l => l.trim()) || '';
+  const counts = {
+    '\t': (first.match(/\t/g)||[]).length,
+    ';':  (first.match(/;/g)||[]).length,
+    ',':  (first.match(/,/g)||[]).length
+  };
+  let sep = '\t', max = 0;
+  for(const [s, c] of Object.entries(counts)){
+    if(c > max){ max = c; sep = s; }
+  }
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  const rows = lines.map(l => l.split(sep).map(c => c.trim().replace(/^"(.*)"$/, '$1')));
+  return { sep, rows };
+}
+function autoMapColumn(header, position){
+  const h = stripAccents(String(header||'').toLowerCase());
+  if(/url|lien|destination|landing|page|redirection/.test(h)) return 'baseurl';
+  if(/source|regie|publisher|plateforme/.test(h)) return 'source';
+  if(/medium|levier|canal|type/.test(h)) return 'medium';
+  if(/objectif|goal|but|kpi|term/.test(h)) return 'objectif';
+  if(/crea|format|content|creative|ad[_\s]?name|visuel/.test(h)) return 'crea';
+  return COLS_GRID[position] || 'ignore';
+}
+
+/* ============================================================
+   USER
+   ============================================================ */
+const UserStore = {
+  async get(){
+    try{ const r = await window.storage.get('me', false); return r ? JSON.parse(r.value) : null; }
+    catch(e){ return null; }
+  },
+  async set(u){
+    try{ await window.storage.set('me', JSON.stringify(u), false); }
+    catch(e){}
+  }
+};
+async function initUser(){
+  let u = await UserStore.get();
+  if(!u){ u = await promptUser(); await UserStore.set(u); }
+  State.user = u;
+  document.getElementById('userName').textContent = u.name;
+  document.getElementById('userAvatar').textContent = u.name.slice(0,2).toUpperCase();
+}
+function promptUser(){
+  return new Promise(resolve => {
+    showModal(`
+      <h3>Bienvenue sur Tracking Builder</h3>
+      <p>Identifiez-vous pour collaborer avec votre équipe.</p>
+      <label class="lbl" style="display:block;margin-bottom:6px">Votre prénom ou identifiant</label>
+      <input type="text" id="mUser" placeholder="ex : Camille D." autofocus>
+      <label class="lbl" style="display:block;margin-bottom:6px">Votre rôle</label>
+      <select id="mRole">
+        <option value="Conseil">Conseil</option>
+        <option value="Expert média">Expert média / Trader</option>
+        <option value="Expert tracking / analytics">Expert tracking / analytics</option>
+        <option value="Manager">Manager / Direction</option>
+      </select>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="(function(){
+          const n=document.getElementById('mUser').value.trim();
+          if(!n) return;
+          const role=document.getElementById('mRole').value;
+          hideModal();
+          window._userResolve({name:n, role});
+        })()">Continuer</button>
+      </div>
+    `);
+    window._userResolve = resolve;
+  });
+}
+
+/* ============================================================
+   MODAL & TOAST
+   ============================================================ */
+function showModal(html, size){
+  const box = document.getElementById('modalBox');
+  box.className = 'modal' + (size === 'large' ? ' large' : '');
+  box.innerHTML = html;
+  document.getElementById('modalBg').classList.add('show');
+}
+function hideModal(){ document.getElementById('modalBg').classList.remove('show'); }
+document.getElementById('modalBg').addEventListener('click', e => {
+  if(e.target.id === 'modalBg') hideModal();
+});
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._tT);
+  window._tT = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+function setSync(label){ document.getElementById('syncLabel').textContent = label; }
+
+/* ============================================================
+   APP
+   ============================================================ */
+const App = {
+  async init(){
+    const theme = await loadTheme();
+    setTheme(theme);
+    await initUser();
+    this.goDashboard();
+  },
+
+  async goDashboard(){
+    State.view = 'dashboard'; State.advertiserId = null; State.waveId = null;
+    State.isDirty.clear();
+    this.stopPolling();
+    this.renderBreadcrumb();
+    await this.renderDashboard();
+  },
+  async goClient(id){
+    State.view = 'client'; State.advertiserId = id; State.waveId = null;
+    State.isDirty.clear();
+    this.stopPolling();
+    State.advertiser = await Store.getAdvertiser(id);
+    if(!State.advertiser){ toast('Annonceur introuvable.'); return this.goDashboard(); }
+    this.renderBreadcrumb();
+    await this.renderClient();
+  },
+  async goWorkspace(advId, waveId){
+    State.view = 'workspace'; State.advertiserId = advId; State.waveId = waveId;
+    State.isDirty.clear();
+    State.advertiser = await Store.getAdvertiser(advId);
+    State.wave = await Store.getWave(waveId, advId);
+    if(!State.wave){ toast('Vague introuvable.'); return this.goClient(advId); }
+    if(typeof State.wave.expert_account_id === 'undefined') State.wave.expert_account_id = '';
+    this.renderBreadcrumb();
+    await this.renderWorkspace();
+    this.startPolling();
+  },
+
+  startPolling(){
+    this.stopPolling();
+    State.pollTimer = setInterval(()=>this.refreshWorkspaceSilent(), 4000);
+  },
+  stopPolling(){ if(State.pollTimer){ clearInterval(State.pollTimer); State.pollTimer = null; } },
+  async refreshWorkspaceSilent(){
+    if(State.view !== 'workspace') return;
+    setSync('Synchronisation…');
+    const fresh = await Store.listRows(State.waveId);
+    const freshWave = await Store.getWave(State.waveId, State.advertiserId);
+    let changed = 0;
+    fresh.forEach(fr => {
+      if(State.isDirty.has(fr.id)) return;
+      const old = State.rows.find(r => r.id === fr.id);
+      if(!old || old.updated_at !== fr.updated_at) changed++;
+    });
+    if(fresh.length !== State.rows.length) changed++;
+    State.rows = fresh.map(fr => State.isDirty.has(fr.id) ? State.rows.find(r=>r.id===fr.id) || fr : fr);
+    const expertInput = document.getElementById('waveExpertId');
+    if(freshWave && (!expertInput || document.activeElement !== expertInput)){
+      if((freshWave.expert_account_id||'') !== (State.wave.expert_account_id||'')){
+        State.wave.expert_account_id = freshWave.expert_account_id || '';
+        if(expertInput) expertInput.value = State.wave.expert_account_id;
+      }
+    }
+    if(changed > 0){
+      this.renderWorkspaceGrid();
+      this.renderOutput();
+    }
+    setTimeout(()=>setSync('Synchronisé'), 600);
+  },
+
+  renderBreadcrumb(){
+    const el = document.getElementById('breadcrumb');
+    let html = '';
+    if(State.view === 'dashboard'){
+      html = '<span class="current">Annonceurs</span>';
+    } else if(State.view === 'client'){
+      html = `<a onclick="App.goDashboard()">Annonceurs</a> <span class="sep">›</span> <span class="current">${esc(State.advertiser?.name||'')}</span>`;
+    } else if(State.view === 'workspace'){
+      html = `<a onclick="App.goDashboard()">Annonceurs</a> <span class="sep">›</span>
+              <a onclick="App.goClient('${State.advertiserId}')">${esc(State.advertiser?.name||'')}</a>
+              <span class="sep">›</span> <span class="current">${esc(State.wave?.wave_name||'')} (${State.wave?.year_date||''})</span>`;
+    }
+    el.innerHTML = html;
+  },
+
+  /* ============= DASHBOARD ============= */
+  async renderDashboard(){
+    const list = await Store.listAdvertisers();
+    const root = document.getElementById('viewRoot');
+    root.innerHTML = `
+      <div class="page-head">
+        <div>
+          <h2>Annonceurs</h2>
+          <div class="sub-line">${list.length} client${list.length>1?'s':''} actif${list.length>1?'s':''} · cliquez pour accéder aux vagues.</div>
+        </div>
+        <button class="btn-primary btn-big" onclick="App.modalNewAdvertiser()">＋ Ajouter un nouveau client</button>
+      </div>
+      ${list.length === 0
+        ? `<div class="empty"><span class="big">Aucun annonceur pour l'instant</span>Commencez par ajouter votre premier client pour créer des vagues de tracking.</div>`
+        : `<div class="grid-cards" id="advCards"></div>`}
+    `;
+    if(list.length === 0) return;
+    const cards = document.getElementById('advCards');
+    let delay = 0;
+    for(const adv of list){
+      const waves = await Store.listWaves(adv.id);
+      const card = document.createElement('div');
+      card.className = 'client-card';
+      card.style.animationDelay = (delay += 0.05) + 's';
+      card.onclick = (e)=>{ if(e.target.closest('.del-btn')) return; App.goClient(adv.id); };
+      card.innerHTML = `
+        <button class="del-btn" title="Supprimer" onclick="event.stopPropagation();App.confirmDeleteAdv('${adv.id}')">🗑</button>
+        <div class="name">${esc(adv.name)}</div>
+        <div class="sub">Créé ${fmtDate(adv.created_at)}</div>
+        <div class="meta">
+          <span><b>${waves.length}</b> vague${waves.length>1?'s':''}</span>
+        </div>
+      `;
+      cards.appendChild(card);
+    }
+  },
+  modalNewAdvertiser(){
+    showModal(`
+      <h3>Nouveau client</h3>
+      <p>Le nom de l'annonceur sera repris dans le préfixe de campagne (ex : <b>v1lu52_LNB_2026_GreenDays</b>).</p>
+      <label class="lbl" style="display:block;margin-bottom:6px">Nom de l'annonceur</label>
+      <input type="text" id="mName" placeholder="ex : LNB" autofocus>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="hideModal()">Annuler</button>
+        <button class="btn-primary" onclick="App.createAdvertiser()">Créer</button>
+      </div>
+    `);
+  },
+  async createAdvertiser(){
+    const name = document.getElementById('mName').value.trim();
+    if(!name){ toast('Le nom est obligatoire.'); return; }
+    const adv = { id: newId(), name, created_at: now() };
+    await Store.saveAdvertiser(adv);
+    hideModal();
+    toast(`Client "${name}" créé ✓`);
+    this.renderDashboard();
+  },
+  confirmDeleteAdv(id){
+    showModal(`
+      <h3>Supprimer cet annonceur ?</h3>
+      <p>Toutes les vagues, lignes et archives associées seront définitivement supprimées. Cette action est irréversible.</p>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="hideModal()">Annuler</button>
+        <button class="btn-danger-solid" onclick="App.deleteAdv('${id}')">Supprimer définitivement</button>
+      </div>
+    `);
+  },
+  async deleteAdv(id){
+    await Store.deleteAdvertiser(id);
+    hideModal(); toast('Annonceur supprimé.');
+    this.renderDashboard();
+  },
+
+  /* ============= CLIENT (vagues) ============= */
+  async renderClient(){
+    const waves = await Store.listWaves(State.advertiserId);
+    const stats = {};
+    for(const w of waves){
+      const rs = await Store.listRows(w.id);
+      const snaps = await Store.listSnapshots(w.id);
+      stats[w.id] = { total: rs.length, archives: snaps.length };
+    }
+    const root = document.getElementById('viewRoot');
+    root.innerHTML = `
+      <div class="page-head">
+        <div>
+          <h2>${esc(State.advertiser.name)}</h2>
+          <div class="sub-line">${waves.length} vague${waves.length>1?'s':''} de campagne · sélectionnez-en une pour ouvrir le workspace tracking.</div>
+        </div>
+        <button class="btn-primary btn-big" onclick="App.modalNewWave()">＋ Créer une nouvelle vague</button>
+      </div>
+      ${waves.length === 0
+        ? `<div class="empty"><span class="big">Aucune vague pour ce client</span>Créez la première vague pour commencer à générer des URL de tracking.</div>`
+        : `<div id="waveList"></div>`}
+    `;
+    if(waves.length === 0) return;
+    const list = document.getElementById('waveList');
+    let delay = 0;
+    waves.forEach(w => {
+      const s = stats[w.id];
+      const item = document.createElement('div');
+      item.className = 'wave-item';
+      item.style.animationDelay = (delay += 0.04) + 's';
+      item.onclick = (e) => { if(e.target.closest('.del-btn')) return; App.goWorkspace(State.advertiserId, w.id); };
+      item.innerHTML = `
+        <div>
+          <div class="wave-name">${esc(w.wave_name)}</div>
+          <div class="wave-year">Année ${w.year_date} · créée ${fmtDate(w.created_at)}</div>
+        </div>
+        <div class="stat"><b>${s.total}</b>Lignes</div>
+        <div class="stat archives"><b>${s.archives}</b>Archive${s.archives>1?'s':''}</div>
+        <button class="del-btn" title="Supprimer la vague" onclick="event.stopPropagation();App.confirmDeleteWave('${w.id}')">🗑</button>
+      `;
+      list.appendChild(item);
+    });
+  },
+  modalNewWave(){
+    showModal(`
+      <h3>Nouvelle vague</h3>
+      <p>La vague constitue une période ou opération marketing pour <b>${esc(State.advertiser.name)}</b>.</p>
+      <label class="lbl" style="display:block;margin-bottom:6px">Nom de la vague</label>
+      <input type="text" id="mWave" placeholder="ex : GreenDays_Juin_2026" autofocus>
+      <label class="lbl" style="display:block;margin-bottom:6px">Année</label>
+      <input type="number" id="mYear" value="${new Date().getFullYear()}" min="2020" max="2099">
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="hideModal()">Annuler</button>
+        <button class="btn-primary" onclick="App.createWave()">Créer</button>
+      </div>
+    `);
+  },
+  async createWave(){
+    const name = document.getElementById('mWave').value.trim();
+    const year = parseInt(document.getElementById('mYear').value, 10);
+    if(!name){ toast('Le nom de la vague est obligatoire.'); return; }
+    if(!year || year < 2020 || year > 2099){ toast('Année invalide (2020–2099).'); return; }
+    const wave = { id:newId(), advertiser_id:State.advertiserId, wave_name:name, year_date:year, expert_account_id:'', created_at:now() };
+    await Store.saveWave(wave);
+    hideModal(); toast(`Vague "${name}" créée ✓`);
+    this.goWorkspace(State.advertiserId, wave.id);
+  },
+  confirmDeleteWave(waveId){
+    showModal(`
+      <h3>Supprimer cette vague ?</h3>
+      <p>Toutes les lignes de tracking ET les archives associées seront définitivement supprimées. Cette action est irréversible.</p>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="hideModal()">Annuler</button>
+        <button class="btn-danger-solid" onclick="App.deleteWave('${waveId}')">Supprimer définitivement</button>
+      </div>
+    `);
+  },
+  async deleteWave(waveId){
+    await Store.deleteWave(waveId, State.advertiserId);
+    hideModal(); toast('Vague supprimée.');
+    this.renderClient();
+  },
+
+  /* ============= WORKSPACE ============= */
+  async renderWorkspace(){
+    State.rows = await Store.listRows(State.waveId);
+    const root = document.getElementById('viewRoot');
+    root.innerHTML = `
+      <div class="page-head">
+        <div>
+          <h2>${esc(State.wave.wave_name)} <span class="sub">· ${State.wave.year_date}</span></h2>
+          <div class="sub-line">Workspace de tracking pour <b>${esc(State.advertiser.name)}</b> · enregistrement automatique et synchronisation temps réel.</div>
+        </div>
+        <button class="btn-ghost" onclick="App.goClient('${State.advertiserId}')">← Retour aux vagues</button>
+      </div>
+
+      <div class="card" style="animation-delay:.05s">
+        <div class="card-head"><h2><span class="step-number">1</span>Outil Analytics</h2></div>
+        <div class="card-body">
+          <div class="sub" style="margin-bottom:14px">L'export final inclura toujours GA4 + Eulerian. Ce sélecteur change uniquement l'aperçu de la formule.</div>
+          <div class="tool-row">
+            <label class="lbl" for="tool">Plateforme d'aperçu :</label>
+            <select class="tool" id="tool" onchange="App.changeTool()">
+              <option value="ga4">Google Analytics 4 (GA4 – UTM)</option>
+              <option value="matomo">Matomo (PK)</option>
+              <option value="eulerian">Eulerian (ESC)</option>
+              <option value="piano">Piano Analytics</option>
+            </select>
+            <div class="formula-preview" id="formula"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.1s">
+        <div class="card-head"><h2><span class="step-number">2</span>Saisie collaborative des lignes de tracking</h2></div>
+        <div class="card-body">
+          <div class="sub" style="margin-bottom:14px">Renseignez les paramètres, importez un CSV ou collez depuis un tableur.</div>
+          <div class="toolbar">
+            <button class="btn-primary" onclick="App.addRow(true)">＋ Ajouter une ligne</button>
+            <button class="btn-import" onclick="App.openImportModal()">⬆ Importer / Coller en masse</button>
+            <button class="btn-ghost" onclick="App.fillEmpty()">⤓ Propager URL de base</button>
+            <div class="spacer"></div>
+            <button class="btn-danger" onclick="App.confirmClearGrid()">✕ Vider la grille</button>
+          </div>
+          <div class="grid-scroll">
+            <table id="grid">
+              <thead><tr>
+                <th class="req">URL de base</th>
+                <th class="req">Source</th>
+                <th class="req">Medium</th>
+                <th class="req">Objectif</th>
+                <th class="req">Créa / Format</th>
+                <th>Modifié par</th>
+                <th>Actions</th>
+              </tr></thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.15s">
+        <div class="card-head"><h2><span class="step-number">3</span>Section Expert · ID compte client <span class="opt-tag">OPTIONNEL</span></h2></div>
+        <div class="card-body">
+          <div class="sub" style="margin-bottom:14px">À renseigner par l'expert média uniquement s'il a dû créer un nouveau compte client sur sa plateforme d'achat.</div>
+          <div class="expert-panel">
+            <div class="field">
+              <label class="lbl" for="waveExpertId">ID du compte client créé sur la plateforme d'achat</label>
+              <input type="text" id="waveExpertId" placeholder="ex : act_1234567890" value="${esc(State.wave.expert_account_id||'')}" oninput="App.saveWaveExpertId(this.value)">
+              <span class="sub">Enregistrement automatique · partagé avec toute l'équipe pour cette vague.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.2s">
+        <div class="card-head"><h2><span class="step-number">4</span>URL générées</h2></div>
+        <div class="card-body">
+          <div class="sub" style="margin-bottom:14px">Aperçu basé sur l'outil sélectionné. L'export CSV inclut GA4 + Eulerian.</div>
+          <div class="toolbar">
+            <button class="btn-green btn-big" onclick="App.renderOutput()">⚡ Régénérer les URL</button>
+            <button class="btn-ghost" onclick="App.copyAll()">📋 Copier tout (aperçu)</button>
+            <button class="btn-primary" onclick="App.exportCsv()">⬇ Exporter CSV</button>
+          </div>
+          <div id="summary"></div>
+          <div id="output"></div>
+        </div>
+      </div>
+
+      <div class="card" style="animation-delay:.25s">
+        <div class="card-head"><h2><span class="step-number">5</span>Historique des exports <span class="opt-tag">ARCHIVES</span></h2></div>
+        <div class="card-body">
+          <div class="sub" style="margin-bottom:14px">Sauvegardez une copie figée de la vague à un instant T. Utile pour garder une trace après un lancement ou avant de modifier la grille.</div>
+          <div class="toolbar">
+            <button class="btn-archive btn-big" onclick="App.modalNewSnapshot()">📸 Enregistrer cet export</button>
+          </div>
+          <div class="snap-list" id="snapshotsList"></div>
+        </div>
+      </div>
+    `;
+    document.getElementById('tool').value = State.tool;
+    this.refreshFormula();
+    this.renderWorkspaceGrid();
+    this.renderOutput();
+    this.renderSnapshots();
+  },
+
+  changeTool(){
+    State.tool = document.getElementById('tool').value;
+    this.refreshFormula();
+    this.renderOutput();
+  },
+  refreshFormula(){
+    document.getElementById('formula').textContent = TOOLS[State.tool].example;
+  },
+
+  renderWorkspaceGrid(){
+    const tbody = document.getElementById('rows');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+    if(State.rows.length === 0){
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-row">
+        <span class="big">Aucune ligne pour l'instant</span>
+        Commencez à saisir manuellement ou importez un CSV.
+        <div class="actions">
+          <button class="btn-primary" onclick="App.addRow(true)">＋ Ajouter une ligne</button>
+          <button class="btn-import" onclick="App.openImportModal()">⬆ Importer / Coller</button>
+        </div>
+      </td></tr>`;
+      return;
+    }
+    State.rows.forEach(r => tbody.appendChild(this.buildRowEl(r)));
+  },
+
+  buildRowEl(r){
+    const tr = document.createElement('tr');
+    tr.dataset.id = r.id;
+    COLS_GRID.forEach(col => tr.appendChild(this.buildCell(r, col)));
+    const tdMeta = document.createElement('td');
+    tdMeta.className = 'meta-cell';
+    tdMeta.innerHTML = `<b>${esc(r.updated_by||'—')}</b><br><span>${fmtDate(r.updated_at)}</span>`;
+    tr.appendChild(tdMeta);
+    const tdAct = document.createElement('td');
+    tdAct.innerHTML = `<div class="row-actions">
+      <button class="icon-btn" title="Dupliquer" onclick="App.duplicateRow('${r.id}')">⧉</button>
+      <button class="icon-btn del" title="Supprimer" onclick="App.deleteRow('${r.id}')">🗑</button>
+    </div>`;
+    tr.appendChild(tdAct);
+    this.validateRow(tr);
+    return tr;
+  },
+
+  buildCell(r, col){
+    const td = document.createElement('td');
+    const inp = document.createElement('input');
+    inp.value = String(r[col]||'');
+    inp.dataset.col = col;
+    const placeholders = {
+      baseurl:'https://www.exemple.com/page', source:'Meta', medium:'Paid_Social',
+      objectif:'Conversion', crea:'Carrousel_benefice_carre'
+    };
+    inp.placeholder = placeholders[col] || '';
+    if(col === 'source') { inp.setAttribute('list','dl-source'); inp.classList.add('combo'); }
+    if(col === 'medium') { inp.setAttribute('list','dl-medium'); inp.classList.add('combo'); }
+    inp.addEventListener('focus', () => State.isDirty.add(r.id));
+    inp.addEventListener('blur', async () => {
+      await this.saveRowFromDom(r.id);
+      State.isDirty.delete(r.id);
+    });
+    inp.addEventListener('input', () => {
+      this.validateRow(td.parentElement);
+      this.debouncedSave(r.id);
+    });
+    td.appendChild(inp);
+    return td;
+  },
+
+  validateRow(tr){
+    tr.querySelectorAll('input').forEach(inp => {
+      const td = inp.parentElement;
+      const err = validateCell(inp.dataset.col, inp.value);
+      if(err){ td.classList.add('invalid'); td.dataset.error = err; }
+      else  { td.classList.remove('invalid'); td.removeAttribute('data-error'); }
+    });
+  },
+
+  debouncedSave(rowId){
+    clearTimeout(this._debTimer);
+    this._debTimer = setTimeout(()=> this.saveRowFromDom(rowId), 350);
+  },
+  async saveRowFromDom(rowId){
+    const tr = document.querySelector(`tr[data-id="${rowId}"]`);
+    if(!tr) return;
+    const r = State.rows.find(x => x.id === rowId);
+    if(!r) return;
+    tr.querySelectorAll('input').forEach(inp => {
+      r[inp.dataset.col] = inp.value;
+    });
+    r.campaign_name = buildCampaign(State.advertiser.name, State.wave.year_date, State.wave.wave_name);
+    r.generated_url = buildUrl(State.tool, r, State.advertiser.name, State.wave.year_date, State.wave.wave_name);
+    try {
+      await Store.saveRow(r);
+      setSync('Enregistré ✓');
+      setTimeout(()=>setSync('Synchronisé'), 800);
+      const meta = tr.querySelector('.meta-cell');
+      if(meta) meta.innerHTML = `<b>${esc(r.updated_by||'—')}</b><br><span>${fmtDate(r.updated_at)}</span>`;
+      this.renderOutput();
+    } catch(e){ console.error(e); }
+  },
+
+  saveWaveExpertId(val){
+    if(!State.wave) return;
+    State.wave.expert_account_id = val;
+    clearTimeout(this._waveDebTimer);
+    this._waveDebTimer = setTimeout(async () => {
+      try {
+        await Store.saveWave(State.wave);
+        setSync('Enregistré ✓');
+        setTimeout(()=>setSync('Synchronisé'), 800);
+        this.renderOutput();
+      } catch(e){ console.error(e); }
+    }, 400);
+  },
+
+  async addRow(focusFirst){
+    const r = {
+      id: newId(), wave_id: State.waveId,
+      baseurl:'', source:'', medium:'', objectif:'', crea:'',
+      campaign_name:'', generated_url:'',
+      created_at: now(), updated_at: now(),
+      updated_by: State.user?.name || 'Anonyme'
+    };
+    try { await Store.saveRow(r); } catch(e){ toast("Erreur d'enregistrement."); return; }
+    State.rows.push(r);
+    this.renderWorkspaceGrid();
+    if(focusFirst){
+      const tr = document.querySelector(`tr[data-id="${r.id}"]`);
+      tr?.querySelector('input')?.focus();
+    }
+  },
+
+  async duplicateRow(rowId){
+    const r = State.rows.find(x => x.id === rowId);
+    if(!r) return;
+    const copy = {...r, id:newId(), created_at:now(), updated_at:now()};
+    try { await Store.saveRow(copy); } catch(e){ toast("Erreur de duplication."); return; }
+    State.rows.push(copy);
+    this.renderWorkspaceGrid();
+    this.renderOutput();
+    toast('Ligne dupliquée ✓');
+  },
+
+  async deleteRow(rowId){
+    const r = State.rows.find(x => x.id === rowId);
+    if(!r) return;
+    try { await Store.deleteRow(r); } catch(e){ toast("Erreur de suppression."); return; }
+    State.rows = State.rows.filter(x => x.id !== rowId);
+    this.renderWorkspaceGrid();
+    this.renderOutput();
+    toast('Ligne supprimée.');
+  },
+
+  confirmClearGrid(){
+    if(State.rows.length === 0){ toast('La grille est déjà vide.'); return; }
+    showModal(`
+      <h3>Vider la grille ?</h3>
+      <p>Les <b>${State.rows.length} ligne(s)</b> actuellement saisies seront supprimées. Cette action est irréversible.</p>
+      <div style="font-size:.8rem;background:rgba(124,58,237,.08);border-left:3px solid var(--purple);padding:11px 14px;border-radius:8px;color:#5b21b6;margin-bottom:14px;line-height:1.5">
+        💡 <b>Conseil :</b> pensez à <b>archiver</b> l'export actuel avant de vider si vous voulez garder une trace.
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="hideModal()">Annuler</button>
+        <button class="btn-danger-solid" onclick="App.clearGrid()">Confirmer le vidage</button>
+      </div>
+    `);
+  },
+  async clearGrid(){
+    try {
+      await Store.clearRows(State.waveId);
+      State.rows = [];
+      hideModal();
+      toast('Grille vidée ✓');
+      this.renderWorkspaceGrid();
+      this.renderOutput();
+    } catch(e){
+      toast("Erreur lors du vidage.");
+    }
+  },
+
+  async fillEmpty(){
+    let ref = '';
+    State.rows.forEach(r => { if(r.baseurl && !ref) ref = r.baseurl; });
+    if(!ref){ toast('Aucune URL de base à propager.'); return; }
+    const toSave = [];
+    for(const r of State.rows){
+      if(!r.baseurl){
+        r.baseurl = ref;
+        r.generated_url = buildUrl(State.tool, r, State.advertiser.name, State.wave.year_date, State.wave.wave_name);
+        toSave.push(r);
+      }
+    }
+    if(!toSave.length){ toast('Toutes les lignes ont déjà une URL.'); return; }
+    try {
+      await Store.saveRows(State.waveId, toSave);
+      this.renderWorkspaceGrid();
+      this.renderOutput();
+      toast(`URL de base propagée sur ${toSave.length} ligne(s) ✓`);
+    } catch(e){
+      toast("Erreur d'enregistrement.");
+    }
+  },
+
+  /* ============= IMPORT ============= */
+  openImportModal(){
+    State.import = { data:null, hasHeader:true, mapping:[], step:'input', urls:[], rawText:'', fileName:'' };
+    this.renderImportModal();
+  },
+
+  renderImportModal(){
+    const imp = State.import;
+    let body = '';
+
+    if(imp.step === 'input'){
+      body = `
+        <h3>Importer ou coller en masse</h3>
+        <p>Importez un fichier CSV ou collez vos données depuis Excel / Google Sheets. Le séparateur est détecté automatiquement.</p>
+
+        <div class="import-file-zone">
+          <label class="file-pick" for="impFile">📁 Choisir un fichier CSV</label>
+          <input type="file" id="impFile" accept=".csv,.tsv,.txt" onchange="App.onImportFile(this)">
+          <div class="file-name" id="impFileName">${imp.fileName ? '✓ ' + esc(imp.fileName) : ''}</div>
+        </div>
+
+        <div class="or-divider">ou</div>
+
+        <label class="lbl" style="display:block;margin-bottom:6px">Collez vos données ici</label>
+        <textarea class="import-textarea" id="impText" placeholder="https://exemple.com/page\tMeta\tPaid_Social\tConversion\tCarrousel\nhttps://exemple.com/page\tGAG\tDisplay\tAwareness\tBanniere_300x250">${esc(imp.rawText)}</textarea>
+
+        <div class="modal-actions">
+          <button class="btn-ghost" onclick="hideModal()">Annuler</button>
+          <button class="btn-primary" onclick="App.parseImportStep()">Analyser ➜</button>
+        </div>
+      `;
+    } else if(imp.step === 'map'){
+      const fields = [
+        {v:'ignore', l:'— Ignorer —'},
+        {v:'baseurl', l:'URL de base'},
+        {v:'source',  l:'Source'},
+        {v:'medium',  l:'Medium'},
+        {v:'objectif',l:'Objectif'},
+        {v:'crea',    l:'Créa / Format'}
+      ];
+      const colCount = imp.data.rows[0]?.length || 0;
+      let mapHtml = '';
+      for(let i=0; i<colCount; i++){
+        const header = imp.hasHeader && imp.data.rows[0][i]
+          ? imp.data.rows[0][i]
+          : `Colonne ${i+1}`;
+        const sample = imp.hasHeader
+          ? (imp.data.rows[1]?.[i] || '—')
+          : (imp.data.rows[0]?.[i] || '—');
+        mapHtml += `<div class="col-cell">
+          <div class="col-cell-name" title="${esc(header)}">${esc(header)}</div>
+          <select onchange="App.setMapping(${i}, this.value)">
+            ${fields.map(f => `<option value="${f.v}" ${imp.mapping[i] === f.v ? 'selected' : ''}>${f.l}</option>`).join('')}
+          </select>
+          <div style="font-size:.62rem;color:var(--text-light);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(sample)}">ex : ${esc(sample)}</div>
+        </div>`;
+      }
+
+      const startIdx = imp.hasHeader ? 1 : 0;
+      const previewRows = imp.data.rows.slice(startIdx, startIdx + 4);
+      const usedCols = imp.mapping.map((m,i) => m !== 'ignore' ? i : -1).filter(i => i >= 0);
+      let previewHtml = '<table class="preview-table"><thead><tr>';
+      usedCols.forEach(ci => {
+        const field = imp.mapping[ci];
+        previewHtml += `<th>${esc(FIELD_LABELS[field]||field)}</th>`;
+      });
+      previewHtml += '</tr></thead><tbody>';
+      previewRows.forEach(row => {
+        previewHtml += '<tr>' + usedCols.map(ci => `<td>${esc(row[ci]||'')}</td>`).join('') + '</tr>';
+      });
+      previewHtml += '</tbody></table>';
+
+      const totalRows = imp.data.rows.length - startIdx;
+      const sepLabel = imp.data.sep === '\t' ? 'tabulation' : imp.data.sep;
+      const mappedFields = imp.mapping.filter(m => m !== 'ignore' && m).length;
+      const missingRequired = COLS_GRID.filter(c => !imp.mapping.includes(c));
+
+      body = `
+        <h3>Mapper les colonnes</h3>
+        <p>Assignez chaque colonne détectée à un champ. ${totalRows} ligne(s) seront créées.</p>
+
+        <label class="import-check">
+          <input type="checkbox" ${imp.hasHeader ? 'checked' : ''} onchange="App.toggleHeader(this.checked)">
+          <span>La première ligne contient les en-têtes</span>
+        </label>
+
+        <div class="section-title">Mapping des ${colCount} colonnes détectées</div>
+        <div class="column-map">${mapHtml}</div>
+
+        <div class="section-title">Aperçu (${Math.min(4, totalRows)} premières lignes mappées)</div>
+        <div class="preview-wrap">${previewHtml}</div>
+        <div class="preview-info">
+          <b>${totalRows}</b> ligne(s) · séparateur : <b>${sepLabel}</b> · <b>${mappedFields}</b> champ(s) mappé(s)
+          ${missingRequired.length ? `<br><span style="color:var(--orange);font-weight:600">⚠ Champs non mappés : ${missingRequired.map(f => FIELD_LABELS[f]).join(', ')}</span>` : ''}
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-ghost" onclick="App.openImportModal()">← Retour</button>
+          <button class="btn-ghost" onclick="App.generateDirectUrls()">⚡ Générer URLs uniquement</button>
+          <button class="btn-primary" onclick="App.addImportToGrid()">＋ Ajouter à la grille (${totalRows})</button>
+        </div>
+      `;
+    } else if(imp.step === 'urls'){
+      const okCount = imp.urls.filter(u => u.ok).length;
+      const badCount = imp.urls.length - okCount;
+      body = `
+        <h3>URLs générées</h3>
+        <p>${imp.urls.length} ligne(s) traitée(s) · <b style="color:var(--green)">${okCount} valide(s)</b>${badCount ? ` · <b style="color:var(--red)">${badCount} en erreur</b>` : ''}. Ces liens ne sont pas sauvegardés.</p>
+
+        <div style="max-height:340px;overflow:auto;margin-bottom:14px;padding-right:4px">
+          ${imp.urls.map((u, i) => `<div class="url-result ${u.ok ? '' : 'bad'}"><b>Ligne ${i+1}${u.ok ? '' : ' — Erreur'}</b>${esc(u.url)}</div>`).join('')}
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-ghost" onclick="App.openImportModal()">← Nouvel import</button>
+          <button class="btn-ghost" onclick="App.copyImportUrls()">📋 Copier les URLs valides</button>
+          <button class="btn-primary" onclick="hideModal()">Fermer</button>
+        </div>
+      `;
+    }
+
+    showModal(body, 'large');
+  },
+
+  onImportFile(input){
+    const file = input.files[0];
+    if(!file) return;
+    State.import.fileName = file.name;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const ta = document.getElementById('impText');
+      if(ta) ta.value = text;
+      State.import.rawText = text;
+      const fn = document.getElementById('impFileName');
+      if(fn) fn.textContent = '✓ ' + file.name;
+    };
+    reader.onerror = () => toast('Erreur de lecture du fichier.');
+    reader.readAsText(file, 'UTF-8');
+  },
+
+  parseImportStep(){
+    const text = document.getElementById('impText').value;
+    if(!text.trim()){ toast('Aucune donnée à analyser.'); return; }
+    const parsed = parseTabular(text);
+    if(parsed.rows.length === 0){ toast('Aucune ligne détectée.'); return; }
+    State.import.rawText = text;
+    State.import.data = parsed;
+    const firstCell = parsed.rows[0][0] || '';
+    State.import.hasHeader = parsed.rows.length > 1 && !/^https?:\/\//i.test(firstCell);
+    const headerRow = State.import.hasHeader ? parsed.rows[0] : parsed.rows[0].map(() => '');
+    State.import.mapping = headerRow.map((h, i) => autoMapColumn(h, i));
+    State.import.step = 'map';
+    this.renderImportModal();
+  },
+
+  setMapping(idx, value){
+    State.import.mapping[idx] = value;
+    this.renderImportModal();
+  },
+
+  toggleHeader(checked){
+    State.import.hasHeader = checked;
+    const headerRow = checked ? State.import.data.rows[0] : State.import.data.rows[0].map(() => '');
+    State.import.mapping = headerRow.map((h, i) => autoMapColumn(h, i));
+    this.renderImportModal();
+  },
+
+  buildImportRows(){
+    const imp = State.import;
+    const startIdx = imp.hasHeader ? 1 : 0;
+    return imp.data.rows.slice(startIdx).map(rowData => {
+      const r = {
+        id: newId(), wave_id: State.waveId,
+        baseurl:'', source:'', medium:'', objectif:'', crea:'',
+        campaign_name:'', generated_url:'',
+        created_at: now(), updated_at: now(),
+        updated_by: State.user?.name || 'Anonyme'
+      };
+      imp.mapping.forEach((field, i) => {
+        if(field && field !== 'ignore' && COLS_GRID.includes(field)){
+          r[field] = String(rowData[i]||'').trim();
+        }
+      });
+      r.campaign_name = buildCampaign(State.advertiser.name, State.wave.year_date, State.wave.wave_name);
+      r.generated_url = buildUrl(State.tool, r, State.advertiser.name, State.wave.year_date, State.wave.wave_name);
+      return r;
+    });
+  },
+
+  async addImportToGrid(){
+    const newRows = this.buildImportRows();
+    if(!newRows.length){ toast('Aucune ligne à importer.'); return; }
+    try {
+      await Store.saveRows(State.waveId, newRows);
+      State.rows.push(...newRows);
+      hideModal();
+      this.renderWorkspaceGrid();
+      this.renderOutput();
+      toast(`${newRows.length} ligne(s) ajoutée(s) ✓`);
+    } catch(e){
+      toast("Erreur d'enregistrement — réessayez.");
+    }
+  },
+
+  generateDirectUrls(){
+    const rows = this.buildImportRows();
+    if(!rows.length){ toast('Aucune ligne à générer.'); return; }
+    State.import.urls = rows.map(r => {
+      const missing = COLS_GRID.some(c => !String(r[c]||'').trim());
+      const hasErr = COLS_GRID.some(c => validateCell(c, r[c]||''));
+      if(missing) return { ok:false, url:'Champs obligatoires manquants.' };
+      if(hasErr)  return { ok:false, url:'Format non conforme (accent, espace ou caractère spécial).' };
+      return { ok:true, url: r.generated_url };
+    });
+    State.import.step = 'urls';
+    this.renderImportModal();
+  },
+
+  copyImportUrls(){
+    const urls = State.import.urls.filter(u => u.ok).map(u => u.url);
+    if(!urls.length){ toast('Aucune URL valide à copier.'); return; }
+    navigator.clipboard.writeText(urls.join('\n')).then(()=>toast(`${urls.length} lien(s) copié(s) ✓`));
+  },
+
+  /* ============= OUTPUT ============= */
+  renderOutput(){
+    const out = document.getElementById('output');
+    if(!out) return;
+    out.innerHTML = '';
+    let ok = 0, bad = 0;
+
+    if(State.wave?.expert_account_id){
+      const note = document.createElement('div');
+      note.className = 'expert-note';
+      note.innerHTML = `<b>ID compte client (expert)</b> · ${esc(State.wave.expert_account_id)}`;
+      out.appendChild(note);
+    }
+
+    State.rows.forEach((r, i) => {
+      const missingMandatory = COLS_GRID.some(c => !String(r[c]||'').trim());
+      const hasFmtError = COLS_GRID.some(c => validateCell(c, r[c]||''));
+      const item = document.createElement('div');
+      if(missingMandatory || hasFmtError){
+        bad++;
+        item.className = 'out-item bad';
+        item.innerHTML = `<div class="out-meta">Ligne ${i+1}</div>
+          <div class="out-bad-msg">⚠ Champs manquants ou non conformes — complétez la ligne dans la grille.</div>`;
+      } else {
+        ok++;
+        const url = buildUrl(State.tool, r, State.advertiser.name, State.wave.year_date, State.wave.wave_name);
+        r.generated_url = url;
+        item.className = 'out-item ok';
+        item.innerHTML = `<div class="out-meta">Ligne ${i+1} · ${TOOLS[State.tool].label}</div>
+          <a class="out-link" href="${url}" target="_blank" rel="noopener">${url}</a>`;
+      }
+      out.appendChild(item);
+    });
+    if(State.rows.length === 0){
+      out.innerHTML = '<div class="empty">Aucune ligne pour l\'instant.</div>';
+    }
+    const sum = document.getElementById('summary');
+    if(sum){
+      sum.innerHTML = `<div class="summary-bar">
+        <span class="pill ok">${ok} valide${ok>1?'s':''}</span>
+        ${bad ? `<span class="pill bad">${bad} en erreur</span>` : ''}
+        <span class="pill info">${State.rows.length} ligne${State.rows.length>1?'s':''} au total</span>
+      </div>`;
+    }
+  },
+
+  copyAll(){
+    const urls = State.rows.filter(r => r.generated_url).map(r => r.generated_url);
+    if(!urls.length){ toast('Aucune URL générée.'); return; }
+    navigator.clipboard.writeText(urls.join('\n')).then(()=>toast('Liens copiés ✓'));
+  },
+
+  /* ============= EXPORT CSV (Standard + Eulerian) ============= */
+  buildCsvFromRows(rows, meta){
+    const header = ['Annonceur','Date','Vague','URL de redirection','Medium','Source','Objectif','Content','ID-Vague','UTM GA4','UTM Eulerian'];
+    const validRows = rows.filter(r => COLS_GRID.every(c => String(r[c]||'').trim()) && !COLS_GRID.some(c => validateCell(c, r[c])));
+    const skipped = rows.length - validRows.length;
+    const idVague = buildCampaign(meta.advertiser, meta.year_date, meta.wave_name);
+    const dataRows = validRows.map(r => {
+      const ga4 = buildUrl('ga4', r, meta.advertiser, meta.year_date, meta.wave_name);
+      const eul = buildUrl('eulerian', r, meta.advertiser, meta.year_date, meta.wave_name);
+      return [meta.advertiser, meta.year_date, meta.wave_name, r.baseurl, r.medium, r.source, r.objectif, r.crea, idVague, ga4, eul];
+    });
+    const allRows = [header, ...dataRows];
+    const csv = '\uFEFF' + allRows.map(row => row.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n');
+    return { csv, validCount: validRows.length, skipped };
+  },
+
+  buildEulerianCsvFromRows(rows, meta){
+    const header = ['Source','Tracking utm','Nom de campagne','Emplacement (Objectif)','Bannière (Content)','Valeur du segment entrant','Tracking Eulerian'];
+    const validRows = rows.filter(r => COLS_GRID.every(c => String(r[c]||'').trim()) && !COLS_GRID.some(c => validateCell(c, r[c])));
+    const skipped = rows.length - validRows.length;
+    const idVague = buildCampaign(meta.advertiser, meta.year_date, meta.wave_name);
+    const dataRows = validRows.map(r => {
+      const utmUrl = buildUrl('ga4', r, meta.advertiser, meta.year_date, meta.wave_name);
+      const eulUrl = buildUrl('eulerian', r, meta.advertiser, meta.year_date, meta.wave_name);
+      return [r.source, utmUrl, idVague, r.objectif, r.crea, r.source, eulUrl];
+    });
+    const allRows = [header, ...dataRows];
+    const csv = '\uFEFF' + allRows.map(row => row.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';')).join('\r\n');
+    return { csv, validCount: validRows.length, skipped };
+  },
+
+  exportCsv(){
+    if(!State.rows.length){ toast('Rien à exporter.'); return; }
+    const meta = { advertiser: State.advertiser.name, wave_name: State.wave.wave_name, year_date: State.wave.year_date };
+    const std = this.buildCsvFromRows(State.rows, meta);
+    const eul = this.buildEulerianCsvFromRows(State.rows, meta);
+    if(std.validCount === 0){ toast('Aucune ligne valide à exporter.'); return; }
+    this.showCsvExportModal({
+      title: 'Exporter le tracking',
+      subtitle: `<b>${std.validCount}</b> ligne(s) valide(s) exportée(s)${std.skipped ? ` · <span style="color:var(--orange)">${std.skipped} ligne(s) ignorée(s) (incomplètes)</span>` : ''}`,
+      exports: {
+        standard: { csv: std.csv, filename: `tracking_${meta.advertiser}_${meta.wave_name}_${meta.year_date}.csv`, validCount: std.validCount, skipped: std.skipped },
+        eulerian: { csv: eul.csv, filename: `eulerian_${meta.advertiser}_${meta.wave_name}_${meta.year_date}.csv`, validCount: eul.validCount, skipped: eul.skipped }
+      }
+    });
+  },
+
+  showCsvExportModal({ title, subtitle, exports, infoBanner }){
+    State._csvExports = exports;
+    State._csvCtx = { title, subtitle, infoBanner };
+    this._renderCsvExportTab('standard');
+  },
+
+  _renderCsvExportTab(activeTab){
+    if(!State._csvExports) return;
+    const exp = State._csvExports[activeTab];
+    const ctx = State._csvCtx || {};
+    State._csvCache = { csv: exp.csv, filename: exp.filename };
+    const tabs = {
+      standard: { label: '📊 Format Standard', desc: '<b>Format Standard</b> · Annonceur · Date · Vague · URL de redirection · Medium · Source · Objectif · Content · ID-Vague · UTM GA4 · UTM Eulerian.' },
+      eulerian: { label: '🎯 Format Eulerian', desc: '<b>Format Eulerian</b> · Source · Tracking utm · Nom de campagne · Emplacement · Bannière · Valeur du segment entrant · Tracking Eulerian. <em>Prêt pour import direct dans Eulerian.</em>' }
+    };
+    showModal(`
+      <h3>${ctx.title || 'Exporter le tracking'}</h3>
+      ${ctx.subtitle ? `<p>${ctx.subtitle}</p>` : ''}
+      <div class="export-tabs">
+        <button class="export-tab ${activeTab==='standard'?'active':''}" onclick="App._renderCsvExportTab('standard')">${tabs.standard.label}</button>
+        <button class="export-tab ${activeTab==='eulerian'?'active':''}" onclick="App._renderCsvExportTab('eulerian')">${tabs.eulerian.label}</button>
+      </div>
+      <div class="export-info">${tabs[activeTab].desc}</div>
+      ${ctx.infoBanner || ''}
+      <div style="font-size:.72rem;color:var(--text-light);margin-bottom:8px">Fichier : <b style="color:var(--primary)">${esc(exp.filename)}</b> · ${exp.validCount} ligne(s)${exp.skipped ? ` · ${exp.skipped} ignorée(s)` : ''}</div>
+      <div style="font-size:.78rem;background:var(--orange-bg);border-left:3px solid var(--orange);padding:10px 14px;border-radius:8px;color:#92400e;margin-bottom:12px;line-height:1.5">
+        Le téléchargement direct peut être bloqué. Dans ce cas, utilisez <b>Copier</b> puis collez dans Excel (Données → À partir du texte) ou un fichier <code style="background:#fff;padding:1px 5px;border-radius:3px">.csv</code>.
+      </div>
+      <textarea readonly id="csvPreview" style="width:100%;height:200px;font-family:'Consolas',monospace;font-size:.72rem;padding:10px 12px;border:2px solid var(--border);border-radius:8px;margin-bottom:14px;resize:vertical;background:var(--bg);color:var(--text);line-height:1.4">${esc(exp.csv)}</textarea>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="hideModal()">Fermer</button>
+        <button class="btn-ghost" onclick="App.tryDownloadCsv()">⬇ Tenter le téléchargement</button>
+        <button class="btn-primary" onclick="App.copyCsvContent()">📋 Copier le CSV</button>
+      </div>
+    `, 'large');
+    setTimeout(() => {
+      const ta = document.getElementById('csvPreview');
+      if(ta){ ta.focus(); ta.select(); }
+    }, 100);
+  },
+
+  copyCsvContent(){
+    if(!State._csvCache) return;
+    navigator.clipboard.writeText(State._csvCache.csv).then(() => {
+      toast('CSV copié dans le presse-papiers ✓');
+    }).catch(() => {
+      const ta = document.getElementById('csvPreview');
+      if(ta){ ta.focus(); ta.select(); }
+      toast('Copie auto bloquée — utilisez Ctrl+C sur le texte sélectionné.');
+    });
+  },
+
+  tryDownloadCsv(){
+    if(!State._csvCache) return;
+    try {
+      const blob = new Blob([State._csvCache.csv], { type:'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = State._csvCache.filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      toast('Téléchargement lancé · si bloqué, utilisez "Copier"');
+    } catch(e){
+      toast('Téléchargement bloqué — utilisez "Copier le CSV".');
+    }
+  },
+
+  /* ============= SNAPSHOTS ============= */
+  async renderSnapshots(){
+    const container = document.getElementById('snapshotsList');
+    if(!container) return;
+    const snaps = await Store.listSnapshots(State.waveId);
+    if(snaps.length === 0){
+      container.innerHTML = `<div class="snap-empty">Aucune archive pour l'instant. Cliquez sur <b>📸 Enregistrer cet export</b> pour conserver une copie figée de la vague.</div>`;
+      return;
+    }
+    container.innerHTML = snaps.map(s => `
+      <div class="snap-item">
+        <div class="snap-info">
+          <div class="snap-label"><span class="snap-badge">Archive</span>${esc(s.label)}</div>
+          <div class="snap-meta">
+            Créée par <b>${esc(s.created_by)}</b> · ${fmtFullDate(s.created_at)} · <b>${s.row_count}</b> ligne(s) valide(s)
+            ${s.expert_account_id ? ` · ID compte : <b>${esc(s.expert_account_id)}</b>` : ''}
+          </div>
+        </div>
+        <div class="snap-actions">
+          <button class="icon-btn" onclick="App.viewSnapshot('${s.id}')">Voir / Exporter</button>
+          <button class="icon-btn del" title="Supprimer" onclick="App.confirmDeleteSnapshot('${s.id}', '${esc(s.label).replace(/'/g,"\\'")}')">🗑</button>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  modalNewSnapshot(){
+    if(State.rows.length === 0){ toast('Aucune ligne à archiver.'); return; }
+    const meta = { advertiser: State.advertiser.name, wave_name: State.wave.wave_name, year_date: State.wave.year_date };
+    const { validCount, skipped } = this.buildCsvFromRows(State.rows, meta);
+    if(validCount === 0){ toast('Aucune ligne valide à archiver — complétez les champs.'); return; }
+    const defaultLabel = `Export du ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
+    showModal(`
+      <h3>Archiver cet export</h3>
+      <p>Sauvegarde une copie figée de <b>${validCount} ligne(s) valide(s)</b>${skipped ? ` (${skipped} ignorée(s))` : ''}. L'archive reste accessible même si vous modifiez ou videz la grille.</p>
+      <label class="lbl" style="display:block;margin-bottom:6px">Libellé de l'archive</label>
+      <input type="text" id="snapLabel" placeholder="${esc(defaultLabel)}" autofocus>
+      <span class="sub" style="display:block;margin-bottom:14px">Laissez vide pour utiliser la date du jour comme libellé.</span>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="hideModal()">Annuler</button>
+        <button class="btn-archive" onclick="App.createSnapshot()">📸 Archiver</button>
+      </div>
+    `);
+  },
+
+  async createSnapshot(){
+    const labelInput = document.getElementById('snapLabel').value.trim();
+    const label = labelInput || `Export du ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
+    const meta = { advertiser: State.advertiser.name, wave_name: State.wave.wave_name, year_date: State.wave.year_date };
+    const { validCount } = this.buildCsvFromRows(State.rows, meta);
+    const snap = {
+      id: newId(),
+      label,
+      created_at: now(),
+      created_by: State.user?.name || 'Anonyme',
+      row_count: validCount,
+      tool: State.tool,
+      rows: JSON.parse(JSON.stringify(State.rows)),
+      expert_account_id: State.wave.expert_account_id || '',
+      wave_meta: meta
+    };
+    try {
+      await Store.saveSnapshot(State.waveId, snap);
+      hideModal();
+      toast(`Archive "${label}" créée ✓`);
+      this.renderSnapshots();
+    } catch(e){
+      toast("Erreur lors de l'archivage.");
+    }
+  },
+
+  async viewSnapshot(snapId){
+    const snaps = await Store.listSnapshots(State.waveId);
+    const snap = snaps.find(s => s.id === snapId);
+    if(!snap){ toast('Archive introuvable.'); return; }
+    const std = this.buildCsvFromRows(snap.rows, snap.wave_meta);
+    const eul = this.buildEulerianCsvFromRows(snap.rows, snap.wave_meta);
+    const date = snap.created_at.slice(0,10);
+    const adv = snap.wave_meta.advertiser, wave = snap.wave_meta.wave_name;
+    this.showCsvExportModal({
+      title: esc(snap.label),
+      subtitle: `Archivée le <b>${fmtFullDate(snap.created_at)}</b> par <b>${esc(snap.created_by)}</b> · ${std.validCount} ligne(s) valide(s)${std.skipped ? ` · ${std.skipped} ignorée(s)` : ''}`,
+      infoBanner: `<div style="font-size:.82rem;background:var(--purple-bg);border-left:3px solid var(--purple);padding:10px 14px;border-radius:8px;color:#5b21b6;margin-bottom:14px;line-height:1.5">Cette copie est <b>figée</b> au moment de l'archivage. Les modifications postérieures de la vague ne sont pas reflétées ici.</div>`,
+      exports: {
+        standard: { csv: std.csv, filename: `archive_std_${adv}_${wave}_${date}.csv`, validCount: std.validCount, skipped: std.skipped },
+        eulerian: { csv: eul.csv, filename: `archive_eul_${adv}_${wave}_${date}.csv`, validCount: eul.validCount, skipped: eul.skipped }
+      }
+    });
+  },
+
+  confirmDeleteSnapshot(snapId, label){
+    showModal(`
+      <h3>Supprimer cette archive ?</h3>
+      <p>L'archive <b>${esc(label)}</b> sera définitivement supprimée. Cette action est irréversible.</p>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="hideModal()">Annuler</button>
+        <button class="btn-danger-solid" onclick="App.deleteSnapshot('${snapId}')">Supprimer</button>
+      </div>
+    `);
+  },
+
+  async deleteSnapshot(snapId){
+    try {
+      await Store.deleteSnapshot(State.waveId, snapId);
+      hideModal();
+      toast('Archive supprimée.');
+      this.renderSnapshots();
+    } catch(e){
+      toast('Erreur lors de la suppression.');
+    }
+  },
+
+  async changeUser(){
+    const u = await promptUser();
+    await UserStore.set(u);
+    State.user = u;
+    document.getElementById('userName').textContent = u.name;
+    document.getElementById('userAvatar').textContent = u.name.slice(0,2).toUpperCase();
+    toast(`Bonjour ${u.name} ✓`);
+  }
+};
+
+function esc(s){ return String(s||'').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c])); }
+
+App.init();
+</script>
+</body>
+</html>
